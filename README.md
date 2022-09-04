@@ -10,5 +10,5 @@
 - [React routers](https://v5.reactrouter.com/) (Navigational components)
 
 ## Requirements For Initial Setup
--nft_basic:  ERC721 NFT 
--nft_marketplace : project to upload NFT, complete project with React front end.
+- nft_basic:  ERC721 NFT 
+- nft_marketplace : project to upload NFT, complete project with React front end.
