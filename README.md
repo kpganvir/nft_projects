@@ -1,4 +1,5 @@
-# NFT Marketplace
+![GitHub last commit](https://img.shields.io/github/last-commit/kpganvir/nft_projects?style=plastic)
+
 
 ## Technology Stack & Tools
 
@@ -11,4 +12,4 @@
 
 ## Requirements For Initial Setup
 - nft_basic:  ERC721 NFT 
-- nft_marketplace : project to upload NFT, complete project with React front end.
+- nft_marketplace : complete project to upload NFT backend solidity ERC721 contracts,test javascript, deploy javascriptscript, and FrontEnd react.js
