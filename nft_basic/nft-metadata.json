@@ -1,0 +1,13 @@
+{
+    "attributes" 
+    :[
+        {
+        "color":"Blue",
+        "Value":"ABC"
+
+        }
+    ],
+        "description" : "this is demo pic",
+        "image": "https://gateway.pinata.cloud/ipfs/QmZnw8tqw3Dgiy1yZuqXV7Kh868dY7EgneSAvYcpnNUFCo",
+        "name":"paintbursh"
+}
