@@ -95,9 +95,56 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
 
          })
 
-        
-        
-   
+         it( "should fail if newly created item price set=0",
+         async function(){
+
+            await expect(marketplace.connect(add1).makeItem(nft.address,1,0))
+            
+            .to.be.revertedWith("Price must be greater than zero");
+
+
+         })
+     
+      })
+
+      describe("Should purchase NFT",function(){
+           let price=1
+         beforeEach( async function(){
+         
+            await nft.connect(add1).mint(URI);
+            await nft.connect(add1).setApprovalForAll(marketplace.address,true);
+            await marketplace.connect(add1).makeItem(nft.address,1,toWei(price));
+           // await marketplace.connect(add2);
+           
+         
+         })
+
+         it("should purchase item, emit event bought",async function(){
+
+            //we will check balances of seller and deployers(feeaccount)
+
+            const sellerInitialBalance=await add1.getBalance();
+            const feeAccountInitialBalance=await deployer.getBalance();
+
+            totalPrice=await marketplace.getTotalPrice(1);
+            totalPricewithWei=10;
+                   
+            await expect(marketplace.connect(add2).purchaseItem(1,{value:totalPrice}))
+            .to.emit(marketplace,"bought")
+            .withArgs(1,nft.address,1,toWei(price),add1.address,add2.address);
+           
+            const sellerFinalBalance=await add1.getBalance();
+            const feeAccountFinalBalance=await deployer.getBalance();
+           
+            expect(Number(sellerFinalBalance)).to.greaterThan(Number(sellerInitialBalance));
+            expect(Number(feeAccountFinalBalance)).to.greaterThan(Number(feeAccountInitialBalance));
+            //expect(Number(feeAccountFinalBalance).to.greaterThan(feeAccountInitialBalance);
+         })
+ 
+
+      })
+
+
 
 
     })
@@ -111,9 +158,7 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
 
 
  
-  
 
 
 
-})
  
