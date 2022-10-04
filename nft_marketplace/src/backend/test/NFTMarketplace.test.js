@@ -128,17 +128,36 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
 
             totalPrice=await marketplace.getTotalPrice(1);
             totalPricewithWei=10;
-                   
+            //success case when purchase is successful event is emitted
+                   //purchaseItem is payable function so called with 2nd param as ethers you going to pass thats msg.value
             await expect(marketplace.connect(add2).purchaseItem(1,{value:totalPrice}))
             .to.emit(marketplace,"bought")
             .withArgs(1,nft.address,1,toWei(price),add1.address,add2.address);
            
+            //again retrive balances of seller and feeAcount.
             const sellerFinalBalance=await add1.getBalance();
             const feeAccountFinalBalance=await deployer.getBalance();
-           
+           //after successful purchase balances are greater than initial values.
             expect(Number(sellerFinalBalance)).to.greaterThan(Number(sellerInitialBalance));
             expect(Number(feeAccountFinalBalance)).to.greaterThan(Number(feeAccountInitialBalance));
             //expect(Number(feeAccountFinalBalance).to.greaterThan(feeAccountInitialBalance);
+
+            //after success new owner of nft should be buyer.
+            expect(await nft.ownerOf(1)).to.equal(add2.address);
+
+            //fees and seller price test
+             
+            const feeAmount= (feePercent/100)*100;
+            //finalBalance=fee+initialBalance+fee;
+           // expect(+fromWei(feeAccountFinalBalance)).to.equal(+feeAmount + +fromWei(feeAccountInitialBalance));
+        //    expect(+fromWei(sellerFinalBalance)).to.equal(+totalPrice  +  +fromWei(sellerInitialBalance));
+        
+            //test token is mark sold 
+
+            expect((await marketplace.items(1)).sold).to.equal(true);
+
+
+
          })
  
 
