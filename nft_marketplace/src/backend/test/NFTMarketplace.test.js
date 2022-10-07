@@ -4,7 +4,7 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
 
  describe("NFTMarketplace",async function(){
 
-     let deployer,add1,add2,nft,marketplace;
+     let deployer,add1,add2,add3,nft,marketplace;
      let feePercent=1;
      let URI="sample uri";
     beforeEach(async function()
@@ -12,7 +12,7 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
             const NFT = await ethers.getContractFactory("NFT");
             const Marketplace = await ethers.getContractFactory("Marketplace");
 
-            [deployer,add1,add2]=await ethers.getSigners();
+            [deployer,add1,add2,add3]=await ethers.getSigners();
 
             nft= await NFT.deploy();
             marketplace= await Marketplace.deploy(1);
@@ -108,7 +108,8 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
       })
 
       describe("Should purchase NFT",function(){
-           let price=1
+           let price=1;
+           let totalPrice;
          beforeEach( async function(){
          
             await nft.connect(add1).mint(URI);
@@ -127,7 +128,7 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
             const feeAccountInitialBalance=await deployer.getBalance();
 
             totalPrice=await marketplace.getTotalPrice(1);
-            totalPricewithWei=10;
+
             //success case when purchase is successful event is emitted
                    //purchaseItem is payable function so called with 2nd param as ethers you going to pass thats msg.value
             await expect(marketplace.connect(add2).purchaseItem(1,{value:totalPrice}))
@@ -159,9 +160,44 @@ const fromWei=(num)=>ethers.utils.formatEther(num); //put one decimal point
 
 
          })
+
+         //when purchase fails, here test all require() stmts in purchaseITem()
+
+         //when invalid itemid
+
+         //when buyer has less balance than total  price
+
+         //when item is already sold.
+
+         it("should fail: 3 cases when invalid item",async function(){
+
+            //pass itemid=0 or 6 .which does not existed.
+           await expect(
+            marketplace.connect(add2).purchaseItem(6,{value:totalPrice})
+                       ).to.be.revertedWith("item doesnt exists");
+                      
+            //pass amount less that total price          
+        await expect(
+                       marketplace.connect(add2).purchaseItem(1,{value:toWei(0)})
+                                 ).to.be.revertedWith("not enough ether to cover the item price and fee");
+            
+
+             // here add2 purchase token=1    
+       await  marketplace.connect(add2).purchaseItem(1,{value:totalPrice}) ;      
+      //now add3 try to purchase token=1 
+          await expect(
+                       marketplace.connect(deployer).purchaseItem(1,{value:totalPrice})
+                                   ).to.be.revertedWith("item already sold !");
+
+
+         })
+
+         
  
 
       })
+
+      //
 
 
 
