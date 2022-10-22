@@ -38,19 +38,19 @@ const web3Handler = async()=>{
 }
 
 
-  const [loading, setLoading] = useState(true) //when app loading data from blockchain
-  const [nft, setNFT] = useState({})
-  const [marketplace, setMarketplace] = useState({})
+  const [loading, setLoading] = useState(true); //when app loading data from blockchain
+  const [nft, setNFT] = useState({});
+  const [marketplace, setMarketplace] = useState({});
  
   const loadContracts = async (signer) => {
     // Get deployed copies of deployed contracts : ref folder contractsData 
-    const marketplace = new ethers.Contract(MarketplaceAddress.address, MarketplaceAbi.abi, signer)
-    setMarketplace(marketplace)
-    const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer)
-    setNFT(nft)
+    const marketplace_contract = new ethers.Contract(MarketplaceAddress.address, MarketplaceAbi.abi, signer);
+    setMarketplace(marketplace_contract);
+    const nft_contract = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer);
+    setNFT(nft_contract);
 
     //after loading done.set loading to false.
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -67,14 +67,14 @@ const web3Handler = async()=>{
             </div>
           ) : (
             <Routes>
-             <Route path="/" element= { < Home />} />         
-             <Route path="/create" element={ < Create/> } />          
-             <Route  path="/my-listed-items" element={<MyListedItems/> } />  
-             <Route  path="/my-purchase" element= { <MyPurchases/> } />  
+             <Route path="/" element= { < Home marketplace={marketplace} nft={nft} /> }  />         
+             <Route path="/create" />          
+             <Route  path="/my-listed-items" />  
+             <Route  path="/my-purchase" />  
 
             </Routes>
           )}
-        </div>
+       </div>
       </div>
     </BrowserRouter>
 
